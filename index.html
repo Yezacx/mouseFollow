@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            height: 5000px;
+            width: 5000px;
+        }
+        img {
+            position: absolute;
+            border: 1px solid #000;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <img src="images/img.jpg" width="100">
+<script>
+    //需求：点击页面的任意位置，图片跟随鼠标移到相应位置（缓慢移动）
+    var img = document.getElementsByTagName("img")[0];
+    var timer =null;
+    document.onclick = function (event) {
+        event = event||window.event;
+        //兼容IE6、7做pageX和pageY
+        var pageX = event.pageX||scroll().left + event.clientX;
+        var pageY = event.pageY||scroll().top + event.clientY;
+        var targetX = pageX-img.offsetWidth/2;
+        var targetY = pageY-img.offsetHeight/2;
+            clearInterval(timer);
+            timer = setInterval(function () {
+                var speedX = (targetX-img.offsetLeft)/10;
+                var speedY = (targetY-img.offsetTop)/10;
+                speedX = speedX>0?Math.ceil(speedX):Math.floor(speedX);
+                speedY = speedY>0?Math.ceil(speedY):Math.floor(speedY);
+                img.style.left = img.offsetLeft + speedX + "px";
+                img.style.top = img.offsetTop + speedY + "px";
+                if(Math.abs(targetX-img.offsetLeft)<=Math.abs(speedX)&&
+                        Math.abs(targetY-img.offsetTop)<=Math.abs(speedY)){
+                    img.style.left = targetX + "px";
+                    img.style.top = targetY + "px";
+                    clearInterval(timer);
+                }
+            },100)
+    };
+    function scroll(){
+        return {
+            "top":window.pageYOffset||document.documentElement.scrollTop
+            ||document.body.scrollTop,
+            "left":window.pageXOffset||document.documentElement.scrollLeft
+            ||document.body.scrollLeft
+        }
+    }
+</script>
+</body>
+</html>
